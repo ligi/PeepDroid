@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.peep.view.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -33,7 +33,7 @@ class PeepAdapter(val list: List<Peep>) : RecyclerView.Adapter<PeepViewHolder>()
     }
 
     override fun onBindViewHolder(holder: PeepViewHolder, position: Int) {
-        (holder.itemView as TextView).text = list[position].content
+        holder.itemView.peep_text.text = list[position].content
     }
 
 }
