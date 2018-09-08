@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.*
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -64,6 +65,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        fab.setOnClickListener {
+            val peep = peepAPI.peep("yolo")
+            AlertDialog.Builder(this).setMessage(peep).show()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -74,6 +80,12 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_sign_in -> {
+                val init = peepAPI.init()
+                val tokenLine = init?.lines()?.first { it.contains("csrf-token") }?.split("content=")?.last()?.split("\"")?.get(1)
+
+                Log.i("TokenLine", tokenLine)
+                //val getUser = peepAPI.getUser()
+                val setIsUserResult = peepAPI.setIsUser(tokenLine!!)
                 currentSecret = peepAPI.getNewSecret()
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:signtext-$currentSecret"))
                 startActivityForResult(intent, 123)
@@ -87,10 +99,10 @@ class MainActivity : AppCompatActivity() {
         val signature = data?.getStringExtra("SIGNATURE")
         val address = data?.getStringExtra("ADDRESS")?.toLowerCase()
 
-        val url = "https://peepeth.com/verify_signed_secret.js?signed_token=0x" + signature + "&original_token="+currentSecret?.replace(" ","+")+"&address=0x$address&provider=metamask"
+        val url = "https://peepeth.com/verify_signed_secret.js?signed_token=0x" + signature + "&original_token=" + currentSecret?.replace(" ", "+") + "&address=0x$address&provider=metamask"
 
         val result = okHttpClient.newCall(Request.Builder()
-                .header("X-Requested-With","XMLHttpRequest")
+                .header("X-Requested-With", "XMLHttpRequest")
                 .url(url).build()).execute().body()?.string()
 
         AlertDialog.Builder(this).setMessage(result).show()
