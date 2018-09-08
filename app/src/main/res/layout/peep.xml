@@ -10,10 +10,22 @@
             android:layout_height="2px"
             android:background="@color/colorPrimaryDark"/>
 
-    <TextView
-            android:id="@+id/peep_text"
-            android:padding="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <ImageView
+                android:id="@+id/avatar_image"
+                android:layout_width="42dp"
+                android:layout_height="42dp"/>
+
+        <TextView
+                android:id="@+id/peep_text"
+                android:padding="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </LinearLayout>
