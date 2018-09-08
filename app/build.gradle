@@ -38,6 +38,11 @@ dependencies {
 
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 
+    implementation 'com.github.ligi:KAXT:0.20'
+
+    // Koin for Android
+    implementation "org.koin:koin-android:1.0.0-RC-2"
+
     compile 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'
     testImplementation 'junit:junit:4.12'
     testImplementation "com.google.truth:truth:0.42"
