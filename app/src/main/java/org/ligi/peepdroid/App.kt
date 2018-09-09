@@ -19,16 +19,18 @@ class App : Application() {
 
             val persistentCookieJar = PersistentCookieJar(SetCookieCache(), sharedPrefsCookiePersistor)
 
-            persistentCookieJar.clear()
             OkHttpClient.Builder()
                     .cookieJar(persistentCookieJar)
                     .addNetworkInterceptor(HttpLoggingInterceptor().apply {
-                        level = HttpLoggingInterceptor.Level.BODY
+                        level = HttpLoggingInterceptor.Level.HEADERS
                     })
                     .build()
         }
+
         single { Moshi.Builder().build() }
-        single { PeepAPI(get(), get()) }
+        single { SessionStore(this@App) }
+        single { PeepAPI(get(), get(), get()) }
+
     }
 
     override fun onCreate() {

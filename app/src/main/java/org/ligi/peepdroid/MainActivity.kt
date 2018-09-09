@@ -7,7 +7,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.*
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,6 +17,7 @@ import kotlinx.coroutines.experimental.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.koin.android.ext.android.inject
+import org.ligi.kaxt.startActivityFromClass
 import org.ligi.peepdroid.model.Peep
 import org.ligi.peepdroid.model.PeepAPI
 
@@ -66,8 +66,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
-            val peep = peepAPI.peep("yolo")
-            AlertDialog.Builder(this).setMessage(peep).show()
+            /*val peep = peepAPI.peep("yolo")
+            AlertDialog.Builder(this).setMessage(peep).show()*/
+            startActivityFromClass(PeepActivity::class.java)
         }
 
     }
@@ -83,8 +84,6 @@ class MainActivity : AppCompatActivity() {
                 val init = peepAPI.init()
                 val tokenLine = init?.lines()?.first { it.contains("csrf-token") }?.split("content=")?.last()?.split("\"")?.get(1)
 
-                Log.i("TokenLine", tokenLine)
-                //val getUser = peepAPI.getUser()
                 val setIsUserResult = peepAPI.setIsUser(tokenLine!!)
                 currentSecret = peepAPI.getNewSecret()
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:signtext-$currentSecret"))

@@ -5,9 +5,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import org.ligi.peepdroid.model.Peep
 
-
-
-
 fun parsePeeps(json: String): List<Peep> {
     val moshi = Moshi.Builder().build()
 

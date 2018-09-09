@@ -8,13 +8,14 @@
         tools:context=".MainActivity">
 
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/peep_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+   <android.support.v7.widget.AppCompatEditText
+           android:minHeight="64dp"
+           android:id="@+id/peep_input"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"/>
 
     <android.support.design.widget.FloatingActionButton
-            android:src="@drawable/ic_edit"
+            android:src="@drawable/ic_send"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/fab"
