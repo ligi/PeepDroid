@@ -9,7 +9,7 @@ data class Peep (
         val confirmed_timestamp: Long?,
         val block: Int?,
         val instant: Boolean,
-        val parent: Peep,
+        val parent: Peep?,
         val avatarUrl: String,
         var realName: String,
         var name: String,

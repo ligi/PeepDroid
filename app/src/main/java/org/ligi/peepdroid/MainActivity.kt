@@ -7,13 +7,8 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.format.DateUtils.MINUTE_IN_MILLIS
-import android.text.format.DateUtils.getRelativeTimeSpanString
-import android.text.util.Linkify
 import android.view.*
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.peep.view.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -23,26 +18,6 @@ import org.koin.android.ext.android.inject
 import org.ligi.kaxt.startActivityFromClass
 import org.ligi.peepdroid.model.Peep
 import org.ligi.peepdroid.model.PeepAPI
-import java.util.*
-
-class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(peep: Peep) {
-        itemView.peep_text.text = peep.content
-
-        Linkify.addLinks(itemView.peep_text, Linkify.ALL)
-        itemView.peeper_text.text = if (peep.realName.isNotBlank()) {
-            peep.realName
-        } else {
-            peep.name
-        }
-
-        val asDate = Date(peep.timestamp * 1000)
-        itemView.peep_time_text.text = getRelativeTimeSpanString(asDate.time, Calendar.getInstance().timeInMillis, MINUTE_IN_MILLIS)
-
-        val avatarSplit = peep.avatarUrl.split(":")
-        UrlImageViewHelper.setUrlDrawable(itemView.avatar_image, "https://peepeth.s3-us-west-1.amazonaws.com/images/avatars/" + avatarSplit[1] + "/small." + avatarSplit[2])
-    }
-}
 
 class PeepAdapter(private val list: List<Peep>) : RecyclerView.Adapter<PeepViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeepViewHolder {
