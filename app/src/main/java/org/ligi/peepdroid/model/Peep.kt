@@ -10,5 +10,8 @@ data class Peep (
         val block: Int?,
         val instant: Boolean,
         val parent: Peep,
-        val avatarUrl: String
+        val avatarUrl: String,
+        var realName: String,
+        var name: String,
+        var status: String
 )

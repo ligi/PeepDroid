@@ -24,6 +24,12 @@ import org.ligi.peepdroid.model.PeepAPI
 class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(peep: Peep) {
         itemView.peep_text.text = peep.content
+        itemView.peeper_text.text = if (peep.realName.isNotBlank()) {
+            peep.realName
+        } else {
+            peep.name
+        }
+
         val avatarSplit = peep.avatarUrl.split(":")
         UrlImageViewHelper.setUrlDrawable(itemView.avatar_image, "https://peepeth.s3-us-west-1.amazonaws.com/images/avatars/" + avatarSplit[1] + "/small." + avatarSplit[2])
     }
@@ -66,8 +72,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
-            /*val peep = peepAPI.peep("yolo")
-            AlertDialog.Builder(this).setMessage(peep).show()*/
             startActivityFromClass(PeepActivity::class.java)
         }
 
