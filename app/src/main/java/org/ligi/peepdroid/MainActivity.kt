@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
 import android.text.format.DateUtils.getRelativeTimeSpanString
+import android.text.util.Linkify
 import android.view.*
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,6 +28,8 @@ import java.util.*
 class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(peep: Peep) {
         itemView.peep_text.text = peep.content
+
+        Linkify.addLinks(itemView.peep_text, Linkify.ALL)
         itemView.peeper_text.text = if (peep.realName.isNotBlank()) {
             peep.realName
         } else {
