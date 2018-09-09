@@ -18,7 +18,7 @@ class PeepActivity : AppCompatActivity() {
         fab.setOnClickListener {
             val response = peepAPI.peep(peep_input.text.toString())
             if (response.code() != 200) {
-                alert("could not send peep")
+                alert("could not send peep: " +response.body()?.string())
             } else {
                 finish()
             }
