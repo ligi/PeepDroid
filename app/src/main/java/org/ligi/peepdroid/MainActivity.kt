@@ -7,6 +7,8 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.format.DateUtils.MINUTE_IN_MILLIS
+import android.text.format.DateUtils.getRelativeTimeSpanString
 import android.view.*
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,6 +22,7 @@ import org.koin.android.ext.android.inject
 import org.ligi.kaxt.startActivityFromClass
 import org.ligi.peepdroid.model.Peep
 import org.ligi.peepdroid.model.PeepAPI
+import java.util.*
 
 class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(peep: Peep) {
@@ -29,6 +32,9 @@ class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         } else {
             peep.name
         }
+
+        val asDate = Date(peep.timestamp * 1000)
+        itemView.peep_time_text.text = getRelativeTimeSpanString(asDate.time, Calendar.getInstance().timeInMillis, MINUTE_IN_MILLIS)
 
         val avatarSplit = peep.avatarUrl.split(":")
         UrlImageViewHelper.setUrlDrawable(itemView.avatar_image, "https://peepeth.s3-us-west-1.amazonaws.com/images/avatars/" + avatarSplit[1] + "/small." + avatarSplit[2])

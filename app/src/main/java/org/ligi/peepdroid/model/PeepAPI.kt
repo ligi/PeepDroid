@@ -11,7 +11,7 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
               private val moshi: Moshi,
               private val sessionStore: SessionStore) {
 
-    fun getPeeps() = Request.Builder().url("$BASE_API/get_peeps").build().let {
+    fun getPeeps() = Request.Builder().url("$BASE_API/get_peeps?oldest=0").build().let {
         okHttpClient.newCall(it).execute().body()?.string()
     }
 
