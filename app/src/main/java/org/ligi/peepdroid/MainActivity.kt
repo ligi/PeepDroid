@@ -7,7 +7,10 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     private val peepAPI: PeepAPI by inject()
     private val okHttpClient: OkHttpClient by inject()
+    private val sessionStore: SessionStore by inject()
 
     private var currentSecret: String? = null
 
@@ -72,9 +76,10 @@ class MainActivity : AppCompatActivity() {
                 val init = peepAPI.init()
                 val tokenLine = init?.lines()?.first { it.contains("csrf-token") }?.split("content=")?.last()?.split("\"")?.get(1)
 
-                val setIsUserResult = peepAPI.setIsUser(tokenLine!!)
+                peepAPI.setIsUser(tokenLine!!)
                 currentSecret = peepAPI.getNewSecret()
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:signtext-$currentSecret"))
+                val addressPart=sessionStore.getAddress()?:""
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:esm-$addressPart/$currentSecret"))
                 startActivityForResult(intent, 123)
             }
         }
@@ -84,14 +89,19 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val signature = data?.getStringExtra("SIGNATURE")
+
         val address = data?.getStringExtra("ADDRESS")?.toLowerCase()
 
         val url = "https://peepeth.com/verify_signed_secret.js?signed_token=0x" + signature + "&original_token=" + currentSecret?.replace(" ", "+") + "&address=0x$address&provider=metamask"
 
         val result = okHttpClient.newCall(Request.Builder()
                 .header("X-Requested-With", "XMLHttpRequest")
-                .url(url).build()).execute().body()?.string()
+                .url(url).build()).execute()
 
-        AlertDialog.Builder(this).setMessage(result).show()
+        if (result.code() != 200) {
+            AlertDialog.Builder(this).setMessage(result.body()?.string()).show()
+        } else {
+            sessionStore.setAddress(address)
+        }
     }
 }

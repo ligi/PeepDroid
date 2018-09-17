@@ -5,7 +5,6 @@ import okhttp3.*
 import org.ligi.peepdroid.SessionStore
 
 private const val BASE_API = "https://peepeth.com"
-val address = "0x0402c3407dcBD476C3d2Bbd80d1b375144bAF4a2".toLowerCase()
 
 class PeepAPI(private val okHttpClient: OkHttpClient,
               private val moshi: Moshi,
@@ -33,7 +32,7 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
     }
 
 
-    fun getUser() = defaultRequest().url("$BASE_API/get_account?you=true&address=$address").build().let {
+    fun getUser() = defaultRequest().url("$BASE_API/get_account?you=true&address=${sessionStore.getAddress()}").build().let {
         okHttpClient.newCall(it).execute().body()?.string()
     }
 
@@ -44,14 +43,14 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
         val requestBody = FormBody.Builder()
 
                 .add("peep[ipfs]", "xxx")
-                .add("peep[author]", address)
+                .add("peep[author]", sessionStore.getAddress())
                 .add("peep[content]", message)
                 .add("peep[parentID]", "")
                 .add("peep[shareID]", "")
                 .add("peep[twitter_share]", "false")
                 .add("peep[picIpfs]", "")
 
-                .add("peep[origContents]", """{"type":"peep","content":"$message","pic":"","untrustedAddress":"$address","untrustedTimestamp":"$time","shareID":"","parentID":""}""")
+                .add("peep[origContents]", """{"type":"peep","content":"$message","pic":"","untrustedAddress":"${sessionStore.getAddress()}","untrustedTimestamp":"$time","shareID":"","parentID":""}""")
                 .add("share_now", "true")
                 .build()
 
