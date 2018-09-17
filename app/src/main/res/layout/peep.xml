@@ -23,7 +23,6 @@
 
         <LinearLayout
                 android:orientation="vertical"
-                android:paddingBottom="8dp"
                 android:paddingRight="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -44,11 +43,41 @@
                     android:id="@+id/peep_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal">
+                <android.support.v7.widget.AppCompatImageView
+                        android:src="@drawable/ic_reply_black_24dp"
+                        android:paddingRight="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                <android.support.v7.widget.AppCompatImageView
+                        android:src="@drawable/ic_repeat_black_24dp"
+                        android:paddingRight="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                <android.support.v7.widget.AppCompatImageView
+                        android:src="@drawable/ic_favorite_black_24dp"
+                        android:paddingRight="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                <android.support.v7.widget.AppCompatImageView
+                        android:src="@drawable/ic_card_giftcard_black_24dp"
+                        android:paddingRight="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+            </LinearLayout>
 
             <FrameLayout
                     android:id="@+id/parent_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
+
+
         </LinearLayout>
 
     </LinearLayout>
