@@ -1,5 +1,6 @@
 package org.ligi.peepdroid
 
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils.isEmpty
 import android.text.format.DateUtils
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.peep.view.*
+import org.ligi.kaxt.setVisibility
 import org.ligi.peepdroid.model.Peep
 import java.util.*
 
@@ -16,7 +18,7 @@ class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         bind(peep, itemView)
     }
 
-    fun bind(peep: Peep, view: View) {
+    fun bind(peep: Peep, view: View, showControls: Boolean = true) {
         view.peep_text.text = peep.content
 
         Linkify.addLinks(view.peep_text, Linkify.ALL)
@@ -31,6 +33,15 @@ class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         if (!isEmpty(peep.avatarUrl)) {
             val avatarSplit = peep.avatarUrl.split(":")
             UrlImageViewHelper.setUrlDrawable(view.avatar_image, "https://peepeth.s3-us-west-1.amazonaws.com/images/avatars/" + avatarSplit[1] + "/small." + avatarSplit[2])
+        }
+
+        view.controls_container.setVisibility(showControls)
+
+        view.reply_btn.setOnClickListener {
+            val intent = Intent(view.context, PeepActivity::class.java)
+            intent.putExtra("PEEP", peep)
+            intent.putExtra("REPLY", true)
+            view.context.startActivity(intent)
         }
 
         if (peep.parent != null) {

@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
                 peepAPI.setIsUser(tokenLine!!)
                 currentSecret = peepAPI.getNewSecret()
-                val addressPart=sessionStore.getAddress()?:""
+                val addressPart = sessionStore.getAddress() ?: ""
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:esm-$addressPart/$currentSecret"))
                 startActivityForResult(intent, 123)
             }

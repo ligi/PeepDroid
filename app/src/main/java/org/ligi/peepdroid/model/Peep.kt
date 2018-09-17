@@ -1,7 +1,13 @@
 package org.ligi.peepdroid.model
 
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@SuppressLint("ParcelCreator")
+@Parcelize
 data class Peep (
-        val tx: String,
+        val tx: String?,
         val ipfs: String,
         val author: String,
         val content: String,
@@ -14,4 +20,4 @@ data class Peep (
         var realName: String,
         var name: String,
         var status: String
-)
+) : Parcelable

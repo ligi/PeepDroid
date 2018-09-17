@@ -59,3 +59,8 @@ kotlin {
         coroutines "enable"
     }
 }
+
+
+androidExtensions {
+    experimental = true
+}

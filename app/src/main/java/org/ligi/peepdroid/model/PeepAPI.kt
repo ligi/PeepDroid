@@ -10,7 +10,7 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
               private val moshi: Moshi,
               private val sessionStore: SessionStore) {
 
-    fun getPeeps() = Request.Builder().url("$BASE_API/get_peeps?oldest=0" + (sessionStore.getAddress()?.let { "&you=0xit" }?:"")).build().let {
+    fun getPeeps() = Request.Builder().url("$BASE_API/get_peeps?oldest=0" + (sessionStore.getAddress()?.let { "&you=0xit" } ?: "")).build().let {
         okHttpClient.newCall(it).execute().body()?.string()
     }
 
@@ -36,7 +36,9 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
         okHttpClient.newCall(it).execute().body()?.string()
     }
 
-    fun peep(message: String): Response {
+    fun reply(message: String, parent: Peep) = peep(message, parent.ipfs)
+
+    fun peep(message: String, parentID: String = ""): Response {
 
         val time = System.currentTimeMillis() / 1000
 
@@ -45,7 +47,7 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
                 .add("peep[ipfs]", "xxx")
                 .add("peep[author]", sessionStore.getAddress())
                 .add("peep[content]", message)
-                .add("peep[parentID]", "")
+                .add("peep[parentID]", parentID)
                 .add("peep[shareID]", "")
                 .add("peep[twitter_share]", "false")
                 .add("peep[picIpfs]", "")
