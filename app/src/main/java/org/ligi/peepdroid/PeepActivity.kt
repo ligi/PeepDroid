@@ -28,12 +28,19 @@ class PeepActivity : AppCompatActivity() {
         }
 
         val isReply = intent.getBooleanExtra("REPLY", false) && peep != null
+        val isRepeep = intent.getBooleanExtra("REPEEP", false) && peep != null
 
-        supportActionBar?.subtitle = "Replying to " + peep?.name
+        if (isReply) {
+            supportActionBar?.subtitle = "Replying to " + peep?.name
+        } else if (isRepeep) {
+            supportActionBar?.subtitle = "Repeep " + peep?.name
+        }
 
         fab.setOnClickListener {
             val response = if (isReply && peep != null) {
                 peepAPI.reply(peep_input.text.toString(), peep)
+            } else if (isRepeep && peep != null) {
+                peepAPI.share(peep_input.text.toString(), peep)
             } else
                 peepAPI.peep(peep_input.text.toString())
             if (response.code() != 200) {

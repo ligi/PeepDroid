@@ -38,10 +38,11 @@ class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         view.controls_container.setVisibility(showControls)
 
         view.reply_btn.setOnClickListener {
-            val intent = Intent(view.context, PeepActivity::class.java)
-            intent.putExtra("PEEP", peep)
-            intent.putExtra("REPLY", true)
-            view.context.startActivity(intent)
+            startPeepActivity(view, peep,"REPLY")
+        }
+
+        view.repeep_btn.setOnClickListener {
+            startPeepActivity(view, peep, "REPEEP")
         }
 
         if (peep.parent != null) {
@@ -49,5 +50,12 @@ class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             bind(peep.parent, parent)
             view.parent_container.addView(parent)
         }
+    }
+
+    private fun startPeepActivity(view: View, peep: Peep, mode: String) {
+        val intent = Intent(view.context, PeepActivity::class.java)
+        intent.putExtra("PEEP", peep)
+        intent.putExtra(mode, true)
+        view.context.startActivity(intent)
     }
 }

@@ -36,9 +36,10 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
         okHttpClient.newCall(it).execute().body()?.string()
     }
 
-    fun reply(message: String, parent: Peep) = peep(message, parent.ipfs)
+    fun reply(message: String, parent: Peep) = peep(message, parentID = parent.ipfs)
+    fun share(message: String, parent: Peep) = peep(message, shareId = parent.ipfs)
 
-    fun peep(message: String, parentID: String = ""): Response {
+    fun peep(message: String, parentID: String = "", shareId: String = ""): Response {
 
         val time = System.currentTimeMillis() / 1000
 
@@ -48,11 +49,11 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
                 .add("peep[author]", sessionStore.getAddress())
                 .add("peep[content]", message)
                 .add("peep[parentID]", parentID)
-                .add("peep[shareID]", "")
+                .add("peep[shareID]", shareId)
                 .add("peep[twitter_share]", "false")
                 .add("peep[picIpfs]", "")
 
-                .add("peep[origContents]", """{"type":"peep","content":"$message","pic":"","untrustedAddress":"${sessionStore.getAddress()}","untrustedTimestamp":"$time","shareID":"","parentID":""}""")
+                .add("peep[origContents]", """{"type":"peep","content":"$message","pic":"","untrustedAddress":"${sessionStore.getAddress()}","untrustedTimestamp":"$time","shareID":"$shareId","parentID":"$parentID"}""")
                 .add("share_now", "true")
                 .build()
 
