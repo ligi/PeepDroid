@@ -8,11 +8,20 @@
         tools:context=".MainActivity">
 
 
-   <android.support.v7.widget.AppCompatEditText
-           android:minHeight="64dp"
-           android:id="@+id/peep_input"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"/>
+    <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="64dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="280">
+
+        <EditText
+                android:id="@+id/peep_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="420" />
+
+    </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.FloatingActionButton
             android:src="@drawable/ic_send"
