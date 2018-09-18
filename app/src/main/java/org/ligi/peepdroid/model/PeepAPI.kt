@@ -11,7 +11,7 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
               private val moshi: Moshi,
               private val sessionStore: SessionStore) {
 
-    fun getPeeps() = getRequest(("$BASE_API/get_peeps?oldest=0" + (sessionStore.getAddress()?.let { "&you=0xit" } ?: "")))
+    fun getPeeps() = getRequest(("$BASE_API/get_peeps?oldest=0" + (sessionStore.address?.let { "&you=0xit" } ?: "")))
 
 
     fun init() = getRequest("$BASE_API/_")
@@ -29,7 +29,7 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
     fun setIsUser(csrf: String) = defaultRequest()
             .header("X-CSRF-Token", csrf)
             .url("$BASE_API/set_is_user").put(RequestBody.create(null, byteArrayOf())).build().let {
-                sessionStore.setCSRF(csrf)
+                sessionStore.csrf = csrf
                 okHttpClient.newCall(it).execute().body()?.string()
             }
 
@@ -38,7 +38,7 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
     }
 
 
-    fun getUser() = defaultRequest().url("$BASE_API/get_account?you=true&address=${sessionStore.getAddress()}").build().let {
+    fun getUser() = defaultRequest().url("$BASE_API/get_account?you=true&address=${sessionStore.address}").build().let {
         okHttpClient.newCall(it).execute().body()?.string()
     }
 
@@ -52,19 +52,19 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
         val requestBody = FormBody.Builder()
 
                 .add("peep[ipfs]", "xxx")
-                .add("peep[author]", sessionStore.getAddress())
+                .add("peep[author]", sessionStore.address)
                 .add("peep[content]", message)
                 .add("peep[parentID]", parentID)
                 .add("peep[shareID]", shareId)
                 .add("peep[twitter_share]", "false")
                 .add("peep[picIpfs]", "")
 
-                .add("peep[origContents]", """{"type":"peep","content":"$message","pic":"","untrustedAddress":"${sessionStore.getAddress()}","untrustedTimestamp":"$time","shareID":"$shareId","parentID":"$parentID"}""")
+                .add("peep[origContents]", """{"type":"peep","content":"$message","pic":"","untrustedAddress":"${sessionStore.address}","untrustedTimestamp":"$time","shareID":"$shareId","parentID":"$parentID"}""")
                 .add("share_now", "true")
                 .build()
 
         return defaultRequest().url("$BASE_API/create_peep")
-                .header("X-CSRF-Token", sessionStore.getCSRF()).post(requestBody).build().let {
+                .header("X-CSRF-Token", sessionStore.csrf).post(requestBody).build().let {
                     okHttpClient.newCall(it).execute()
                 }
     }

@@ -49,6 +49,7 @@ dependencies {
     // Koin for Android
     implementation "org.koin:koin-android:1.0.0"
 
+    implementation "com.chibatching.kotpref:kotpref:2.6.0"
     implementation "com.android.support:preference-v14:$support_version"
 
     compile 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'

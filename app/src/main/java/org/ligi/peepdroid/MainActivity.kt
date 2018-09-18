@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity() {
 
             peepAPI.setIsUser(tokenLine!!)
             currentSecret = peepAPI.getNewSecret()
-            val addressPart = sessionStore.getAddress() ?: ""
+            val addressPart = sessionStore.address ?: ""
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:esm-$addressPart/$currentSecret"))
 
             async(UI) {
@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                 if (result.code() != 200) {
                     AlertDialog.Builder(this@MainActivity).setMessage(result.body()?.string()).show()
                 } else {
-                    sessionStore.setAddress(address)
+                    sessionStore.address = address
                 }
             }
         }
