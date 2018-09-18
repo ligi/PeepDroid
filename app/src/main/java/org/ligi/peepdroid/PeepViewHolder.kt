@@ -37,11 +37,17 @@ class PeepViewHolder(itemView: View,private val settings: Settings) : RecyclerVi
         } else {
             view.peep_time_text.visibility = View.GONE
         }
-        if (!isEmpty(peep.avatarUrl)) {
-            val avatarSplit = peep.avatarUrl.split(":")
-            UrlImageViewHelper.setUrlDrawable(view.avatar_image, "https://peepeth.s3-us-west-1.amazonaws.com/images/avatars/" + avatarSplit[1] + "/small." + avatarSplit[2])
+
+        if (settings.isAvatarsWanted()) {
+            if (!isEmpty(peep.avatarUrl)) {
+                val avatarSplit = peep.avatarUrl.split(":")
+                UrlImageViewHelper.setUrlDrawable(view.avatar_image, "https://peepeth.s3-us-west-1.amazonaws.com/images/avatars/" + avatarSplit[1] + "/small." + avatarSplit[2])
+            } else {
+                view.avatar_image.setImageResource(R.mipmap.ic_launcher)
+            }
+            view.avatar_image.visibility = View.VISIBLE
         } else {
-            view.avatar_image.setImageResource(R.mipmap.ic_launcher)
+            view.avatar_image.visibility = View.GONE
         }
 
         view.controls_container.setVisibility(showControls)

@@ -10,6 +10,8 @@ class SharedPrefsSettings(private val context: Context) : Settings {
     private val sharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
     override fun isTimeWanted() = sharedPreferences.getBoolean(context.getString(R.string.key_prefs_time), true)
+    override fun isAvatarsWanted() = sharedPreferences.getBoolean(context.getString(R.string.key_prefs_avatars), true)
+
 
     override fun getNightMode() = when (sharedPreferences.getString(context.getString(R.string.key_prefs_day_night), context.getString(R.string.default_day_night))) {
         "day" -> AppCompatDelegate.MODE_NIGHT_NO

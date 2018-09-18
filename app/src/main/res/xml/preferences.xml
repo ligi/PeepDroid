@@ -13,4 +13,8 @@
             android:title="Display time in list"
             android:key="@string/key_prefs_time"/>
 
+    <CheckBoxPreference
+            android:title="Display avatars"
+            android:key="@string/key_prefs_avatars"/>
+
 </PreferenceScreen>
