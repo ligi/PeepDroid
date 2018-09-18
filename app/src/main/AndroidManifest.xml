@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".PeepActivity"/>
         <activity android:name=".InfoActivity"/>
+        <activity android:name=".PreferenceActivity"/>
     </application>
 
 </manifest>

@@ -9,10 +9,12 @@ import org.koin.android.ext.android.inject
 import org.ligi.kaxtui.alert
 import org.ligi.peepdroid.model.Peep
 import org.ligi.peepdroid.model.PeepAPI
+import org.ligi.peepdroid.model.Settings
 
 class PeepActivity : AppCompatActivity() {
 
     private val peepAPI: PeepAPI by inject()
+    private val settings: Settings by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +29,7 @@ class PeepActivity : AppCompatActivity() {
 
         if (peep != null) {
             val peepView = LayoutInflater.from(this).inflate(R.layout.peep, peep_container)
-            PeepViewHolder(peepView).bind(peep, peepView, false)
+            PeepViewHolder(peepView, settings).bind(peep, peepView, false)
         }
 
         val isReply = intent.getBooleanExtra("REPLY", false) && peep != null
@@ -54,7 +56,7 @@ class PeepActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when(item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         android.R.id.home -> true.also { finish() }
         else -> super.onOptionsItemSelected(item)
     }

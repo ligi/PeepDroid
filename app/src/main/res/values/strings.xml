@@ -12,4 +12,13 @@
   <br/><br/>
   Big shout out to Bevan (the father of the PeepETH project) - skywinder + Team  (they did an iOS client that helped understanding the protocol) and the whole ETHBerlin team - the spirit there was just plain awesome.
     ]]></string>
+
+    <string name="day_or_night">Day or Night</string>
+    <string name="day_or_night_summary">Choose between light and dark theme</string>
+
+    <array name="day_night">
+        <item>Day</item>
+        <item>Night</item>
+        <item>Auto</item>
+    </array>
 </resources>

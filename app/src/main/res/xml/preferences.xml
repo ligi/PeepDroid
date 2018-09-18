@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+            android:defaultValue="@string/default_day_night"
+            android:entries="@array/day_night"
+            android:entryValues="@array/day_night_keys"
+            android:key="@string/key_prefs_day_night"
+            android:summary="@string/day_or_night_summary"
+            android:title="@string/day_or_night"/>
+
+    <CheckBoxPreference
+            android:title="Display time in list"
+            android:key="@string/key_prefs_time"/>
+
+</PreferenceScreen>

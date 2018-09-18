@@ -6,6 +6,11 @@
             android:id="@+id/menu_sign_in"/>
 
     <item
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="Settings"
+            android:id="@+id/menu_preferences"/>
+
+    <item
             android:icon="@drawable/ic_info_outline_black_24dp"
             android:title="Info"
             android:id="@+id/menu_info"/>

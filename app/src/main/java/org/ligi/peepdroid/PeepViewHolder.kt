@@ -11,9 +11,11 @@ import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.peep.view.*
 import org.ligi.kaxt.setVisibility
 import org.ligi.peepdroid.model.Peep
+import org.ligi.peepdroid.model.Settings
 import java.util.*
 
-class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class PeepViewHolder(itemView: View,private val settings: Settings) : RecyclerView.ViewHolder(itemView) {
+
     fun bind(peep: Peep) {
         bind(peep, itemView)
     }
@@ -28,8 +30,13 @@ class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             peep.name
         }
 
-        val asDate = Date(peep.timestamp * 1000)
-        view.peep_time_text.text = DateUtils.getRelativeTimeSpanString(asDate.time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+        if (settings.isTimeWanted()) {
+            val asDate = Date(peep.timestamp * 1000)
+            view.peep_time_text.text = DateUtils.getRelativeTimeSpanString(asDate.time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+            view.peep_time_text.visibility = View.VISIBLE
+        } else {
+            view.peep_time_text.visibility = View.GONE
+        }
         if (!isEmpty(peep.avatarUrl)) {
             val avatarSplit = peep.avatarUrl.split(":")
             UrlImageViewHelper.setUrlDrawable(view.avatar_image, "https://peepeth.s3-us-west-1.amazonaws.com/images/avatars/" + avatarSplit[1] + "/small." + avatarSplit[2])

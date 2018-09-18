@@ -19,14 +19,16 @@ import kotlinx.coroutines.experimental.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.koin.android.ext.android.inject
+import org.ligi.kaxt.recreateWhenPossible
 import org.ligi.kaxt.startActivityFromClass
 import org.ligi.peepdroid.model.Peep
 import org.ligi.peepdroid.model.PeepAPI
+import org.ligi.peepdroid.model.Settings
 
-class PeepAdapter(private val list: List<Peep>) : RecyclerView.Adapter<PeepViewHolder>() {
+class PeepAdapter(private val list: List<Peep>, private val settings: Settings) : RecyclerView.Adapter<PeepViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeepViewHolder {
         val li = LayoutInflater.from(parent.context)
-        return PeepViewHolder(li.inflate(R.layout.peep, parent, false))
+        return PeepViewHolder(li.inflate(R.layout.peep, parent, false), settings)
     }
 
     override fun getItemCount() = list.size
@@ -42,8 +44,10 @@ class MainActivity : AppCompatActivity() {
     private val peepAPI: PeepAPI by inject()
     private val okHttpClient: OkHttpClient by inject()
     private val sessionStore: SessionStore by inject()
+    private val settings: Settings by inject()
 
     private var currentSecret: String? = null
+    private var lastNightMode: Int? = null
 
     private val actionBarDrawerToggle by lazy { ActionBarDrawerToggle(this, drawer_layout, R.string.drawer_open, R.string.drawer_close) }
 
@@ -77,6 +81,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_info -> true.also {
                     startActivityFromClass(InfoActivity::class.java)
                 }
+                R.id.menu_preferences -> true.also {
+                    startActivityFromClass(PreferenceActivity::class.java)
+                }
                 else -> false
             }
         }
@@ -84,6 +91,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        if (lastNightMode != null && lastNightMode != settings.getNightMode()) {
+            recreateWhenPossible()
+            return
+        }
+
+        lastNightMode = settings.getNightMode()
+
         refresh()
     }
 
@@ -103,7 +118,7 @@ class MainActivity : AppCompatActivity() {
 
             peepAPI.getPeeps()?.let {
                 async(UI) {
-                    peep_recycler.adapter = PeepAdapter(parsePeeps(it))
+                    peep_recycler.adapter = PeepAdapter(parsePeeps(it), settings)
                     swipe_refresh_layout.isRefreshing = false
                 }
             }

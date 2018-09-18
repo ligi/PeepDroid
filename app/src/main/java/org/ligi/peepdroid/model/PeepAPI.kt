@@ -3,6 +3,7 @@ package org.ligi.peepdroid.model
 import com.squareup.moshi.Moshi
 import okhttp3.*
 import org.ligi.peepdroid.SessionStore
+import java.io.IOException
 
 private const val BASE_API = "https://peepeth.com"
 
@@ -10,15 +11,20 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
               private val moshi: Moshi,
               private val sessionStore: SessionStore) {
 
-    fun getPeeps() = Request.Builder().url("$BASE_API/get_peeps?oldest=0" + (sessionStore.getAddress()?.let { "&you=0xit" } ?: "")).build().let {
-        okHttpClient.newCall(it).execute().body()?.string()
+    fun getPeeps() = getRequest(("$BASE_API/get_peeps?oldest=0" + (sessionStore.getAddress()?.let { "&you=0xit" } ?: "")))
+
+
+    fun init() = getRequest("$BASE_API/_")
+
+    private fun getRequest(s: String) = try {
+        Request.Builder().url(s)
+                .build().let {
+                    okHttpClient.newCall(it).execute().body()?.string()
+                }
+    } catch (ioe: IOException) {
+        ioe.printStackTrace()
+        null
     }
-
-
-    fun init() = Request.Builder().url("$BASE_API/_")
-            .build().let {
-                okHttpClient.newCall(it).execute().body()?.string()
-            }
 
     fun setIsUser(csrf: String) = defaultRequest()
             .header("X-CSRF-Token", csrf)
