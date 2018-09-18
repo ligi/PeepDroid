@@ -49,6 +49,8 @@ class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val parent = LayoutInflater.from(view.context).inflate(R.layout.peep, view.parent_container, false)
             bind(peep.parent, parent)
             view.parent_container.addView(parent)
+        } else {
+            view.parent_container.visibility = View.GONE
         }
     }
 

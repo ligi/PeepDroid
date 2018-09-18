@@ -1,14 +1,15 @@
 package org.ligi.peepdroid
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main.*
@@ -44,9 +45,17 @@ class MainActivity : AppCompatActivity() {
 
     private var currentSecret: String? = null
 
+    private val actionBarDrawerToggle by lazy { ActionBarDrawerToggle(this, drawer_layout, R.string.drawer_open, R.string.drawer_close) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setSupportActionBar(toolbar)
+        drawer_layout.addDrawerListener(actionBarDrawerToggle)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+        }
 
         peep_recycler.layoutManager = LinearLayoutManager(this)
 
@@ -60,11 +69,28 @@ class MainActivity : AppCompatActivity() {
             refresh()
         }
 
+        nav_view.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_sign_in -> true.also { signIn() }
+                else -> false
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         refresh()
+    }
+
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        actionBarDrawerToggle.syncState()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        actionBarDrawerToggle.onConfigurationChanged(newConfig)
     }
 
     private fun refresh() {
@@ -79,43 +105,47 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return super.onCreateOptionsMenu(menu)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return actionBarDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_sign_in -> {
-                val init = peepAPI.init()
-                val tokenLine = init?.lines()?.first { it.contains("csrf-token") }?.split("content=")?.last()?.split("\"")?.get(1)
+    private fun signIn() {
+        launch {
+            val init = peepAPI.init()
+            val tokenLine = init?.lines()?.first { it.contains("csrf-token") }?.split("content=")?.last()?.split("\"")?.get(1)
 
-                peepAPI.setIsUser(tokenLine!!)
-                currentSecret = peepAPI.getNewSecret()
-                val addressPart = sessionStore.getAddress() ?: ""
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:esm-$addressPart/$currentSecret"))
+            peepAPI.setIsUser(tokenLine!!)
+            currentSecret = peepAPI.getNewSecret()
+            val addressPart = sessionStore.getAddress() ?: ""
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:esm-$addressPart/$currentSecret"))
+
+            async(UI) {
                 startActivityForResult(intent, 123)
             }
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val signature = data?.getStringExtra("SIGNATURE")
 
-        val address = data?.getStringExtra("ADDRESS")?.toLowerCase()
+        launch {
+            val signature = data?.getStringExtra("SIGNATURE")
 
-        val url = "https://peepeth.com/verify_signed_secret.js?signed_token=0x" + signature + "&original_token=" + currentSecret?.replace(" ", "+") + "&address=0x$address&provider=metamask"
+            val address = data?.getStringExtra("ADDRESS")?.toLowerCase()
 
-        val result = okHttpClient.newCall(Request.Builder()
-                .header("X-Requested-With", "XMLHttpRequest")
-                .url(url).build()).execute()
+            val url = "https://peepeth.com/verify_signed_secret.js?signed_token=0x" + signature + "&original_token=" + currentSecret?.replace(" ", "+") + "&address=0x$address&provider=metamask"
 
-        if (result.code() != 200) {
-            AlertDialog.Builder(this).setMessage(result.body()?.string()).show()
-        } else {
-            sessionStore.setAddress(address)
+            val result = okHttpClient.newCall(Request.Builder()
+                    .header("X-Requested-With", "XMLHttpRequest")
+                    .url(url).build()).execute()
+
+            async(UI) {
+                if (result.code() != 200) {
+                    AlertDialog.Builder(this@MainActivity).setMessage(result.body()?.string()).show()
+                } else {
+                    sessionStore.setAddress(address)
+                }
+            }
         }
     }
 }
