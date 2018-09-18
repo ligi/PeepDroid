@@ -3,7 +3,8 @@ package org.ligi.peepdroid
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils.isEmpty
-import android.text.format.DateUtils
+import android.text.format.DateUtils.MINUTE_IN_MILLIS
+import android.text.format.DateUtils.getRelativeTimeSpanString
 import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +33,10 @@ class PeepViewHolder(itemView: View,private val settings: Settings) : RecyclerVi
 
         if (settings.isTimeWanted()) {
             val asDate = Date(peep.timestamp * 1000)
-            view.peep_time_text.text = DateUtils.getRelativeTimeSpanString(asDate.time, Calendar.getInstance().timeInMillis, DateUtils.MINUTE_IN_MILLIS)
+            val timeInMillis = Calendar.getInstance().timeInMillis
+            val timeString = getRelativeTimeSpanString(asDate.time, timeInMillis, MINUTE_IN_MILLIS)
+
+            view.peep_time_text.text = if (timeString.startsWith("0 ")) "just now" else timeString
             view.peep_time_text.visibility = View.VISIBLE
         } else {
             view.peep_time_text.visibility = View.GONE
