@@ -33,6 +33,8 @@ class PeepViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         if (!isEmpty(peep.avatarUrl)) {
             val avatarSplit = peep.avatarUrl.split(":")
             UrlImageViewHelper.setUrlDrawable(view.avatar_image, "https://peepeth.s3-us-west-1.amazonaws.com/images/avatars/" + avatarSplit[1] + "/small." + avatarSplit[2])
+        } else {
+            view.avatar_image.setImageResource(R.mipmap.ic_launcher)
         }
 
         view.controls_container.setVisibility(showControls)
