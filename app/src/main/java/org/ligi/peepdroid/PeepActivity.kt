@@ -3,6 +3,7 @@ package org.ligi.peepdroid
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
+import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_peep.*
 import org.koin.android.ext.android.inject
 import org.ligi.kaxtui.alert
@@ -17,6 +18,7 @@ class PeepActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_peep)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val peep = if (intent.hasExtra("PEEP")) {
             intent.getParcelableExtra<Peep>("PEEP")
@@ -51,4 +53,8 @@ class PeepActivity : AppCompatActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem) = when(item.itemId) {
+        android.R.id.home -> true.also { finish() }
+        else -> super.onOptionsItemSelected(item)
+    }
 }
