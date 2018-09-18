@@ -42,6 +42,14 @@ class PeepViewHolder(itemView: View,private val settings: Settings) : RecyclerVi
             view.peep_time_text.visibility = View.GONE
         }
 
+
+        if (peep.image_url!=null) {
+            UrlImageViewHelper.setUrlDrawable(view.peep_image,peep.image_url)
+            view.peep_image.visibility = View.VISIBLE
+        } else {
+            view.peep_image.visibility = View.GONE
+        }
+
         if (settings.isAvatarsWanted()) {
             if (!isEmpty(peep.avatarUrl)) {
                 val avatarSplit = peep.avatarUrl.split(":")

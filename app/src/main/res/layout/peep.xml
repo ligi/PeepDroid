@@ -44,6 +44,11 @@
                     android:id="@+id/peep_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
+            <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/peep_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
