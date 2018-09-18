@@ -47,7 +47,7 @@ dependencies {
     compile 'com.github.ligi:extracompats:0.4'
 
     // Koin for Android
-    implementation "org.koin:koin-android:1.0.0-RC-2"
+    implementation "org.koin:koin-android:1.0.0"
 
     compile 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'
     testImplementation 'junit:junit:4.12'
