@@ -18,6 +18,7 @@ class PeepActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_peep)
 
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val peep = if (intent.hasExtra("PEEP")) {
