@@ -4,4 +4,9 @@
             android:icon="@drawable/ic_vpn_key_black_24dp"
             android:title="Sign in"
             android:id="@+id/menu_sign_in"/>
+
+    <item
+            android:icon="@drawable/ic_info_outline_black_24dp"
+            android:title="Info"
+            android:id="@+id/menu_info"/>
 </menu>

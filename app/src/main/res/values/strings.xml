@@ -2,4 +2,14 @@
     <string name="app_name">PeepDroid</string>
     <string name="drawer_close">close</string>
     <string name="drawer_open">open</string>
+    <string name="info_text"><![CDATA[
+
+   This application is a native <a href="https://peepeth.com">PeepETH</a> client for Android. It was born at the 1st <a href="https://ethberlin.com">ETHBerlin</a> hackathon 2018.
+    <br/><br/>
+    If you do not yet have a PeepETH account <a href="https://peepeth.com/?PeepethLoves=ligi>please click here</a> and click Request Invite. You can also drop <a href="mailto:ligi+peepethinvite@ligi.de">ligi</a> a mail - he has 5 direct invites per day so it goes really fast.
+    <br/><br/>
+    Our great Icon was designed by <a href="https://github.com/katotopark">ozko</a>. Code is done by <a href="https://ligi.de>ligi</a> and <a href="https://github.com/biafra23">Dirk</a>. But you can also contribute. The code is GPLv3 and you can <a href="https://github.com/biafra23">find it here</a>.
+  <br/><br/>
+  Big shout out to Bevan (the father of the PeepETH project) - skywinder + Team  (they did an iOS client that helped understanding the protocol) and the whole ETHBerlin team - the spirit there was just plain awesome.
+    ]]></string>
 </resources>

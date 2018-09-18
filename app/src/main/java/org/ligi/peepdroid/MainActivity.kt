@@ -71,7 +71,12 @@ class MainActivity : AppCompatActivity() {
 
         nav_view.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.menu_sign_in -> true.also { signIn() }
+                R.id.menu_sign_in -> true.also {
+                    signIn()
+                }
+                R.id.menu_info -> true.also {
+                    startActivityFromClass(InfoActivity::class.java)
+                }
                 else -> false
             }
         }
