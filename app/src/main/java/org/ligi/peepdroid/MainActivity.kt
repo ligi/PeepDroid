@@ -50,19 +50,33 @@ class MainActivity : AppCompatActivity() {
 
         peep_recycler.layoutManager = LinearLayoutManager(this)
 
-        launch {
-
-            peepAPI.getPeeps()?.let {
-                async(UI) {
-                    peep_recycler.adapter = PeepAdapter(parsePeeps(it))
-                }
-            }
-        }
+        refresh()
 
         fab.setOnClickListener {
             startActivityFromClass(PeepActivity::class.java)
         }
 
+        swipe_refresh_layout.setOnRefreshListener {
+            refresh()
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refresh()
+    }
+
+    private fun refresh() {
+        launch {
+
+            peepAPI.getPeeps()?.let {
+                async(UI) {
+                    peep_recycler.adapter = PeepAdapter(parsePeeps(it))
+                    swipe_refresh_layout.isRefreshing = false
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
