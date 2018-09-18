@@ -14,6 +14,10 @@ Big shout out to:
  * [skywinder](https://github.com) + Team ([iOS PeepETH client](https://github.com/matterinc/PeepethClient))
  * the whole ETHBerlin team - spirit there was just plain awesome
 
+Contact:
+
+ * You can [reach us on [matrix]](https://riot.im/app/#/room/!pROfbymRuQSSGKjCgK:matrix.org)
+
 # Context
 
  * https://peepeth.com
