@@ -8,7 +8,7 @@ import org.koin.android.ext.android.inject
 import org.ligi.kaxt.recreateWhenPossible
 import org.ligi.peepdroid.model.Settings
 
-class PeepDroidPrefernecesFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class PeepDroidPreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val settings: Settings by inject()
 

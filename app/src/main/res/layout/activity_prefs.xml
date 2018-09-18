@@ -21,7 +21,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <fragment
-            android:name="org.ligi.peepdroid.PeepDroidPrefernecesFragment"
+            android:name="org.ligi.peepdroid.PeepDroidPreferencesFragment"
             android:id="@+id/preferences_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
