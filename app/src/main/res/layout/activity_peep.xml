@@ -34,7 +34,7 @@
             app:counterEnabled="true"
             app:counterMaxLength="280">
 
-        <EditText
+        <android.support.v7.widget.AppCompatMultiAutoCompleteTextView
                 android:id="@+id/peep_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

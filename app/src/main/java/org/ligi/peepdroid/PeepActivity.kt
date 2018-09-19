@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_peep.*
 import org.koin.android.ext.android.inject
 import org.ligi.kaxtui.alert
@@ -54,7 +55,14 @@ class PeepActivity : AppCompatActivity() {
                 finish()
             }
         }
+
+        val usernameArray = arrayOf("@peepeth", "@ligi", "@bevan", "@zen")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, usernameArray)
+
+        peep_input.setAdapter<ArrayAdapter<String>>(adapter)
+        peep_input.setTokenizer(SpaceTokenizer())
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         android.R.id.home -> true.also { finish() }
