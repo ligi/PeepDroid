@@ -1,5 +1,6 @@
 package org.ligi.peepdroid
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
@@ -21,6 +22,7 @@ import okhttp3.Request
 import org.koin.android.ext.android.inject
 import org.ligi.kaxt.recreateWhenPossible
 import org.ligi.kaxt.startActivityFromClass
+import org.ligi.kaxtui.alert
 import org.ligi.peepdroid.model.Peep
 import org.ligi.peepdroid.model.PeepAPI
 import org.ligi.peepdroid.model.Settings
@@ -140,7 +142,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:esm-$addressPart/$currentSecret"))
 
             async(UI) {
-                startActivityForResult(intent, 123)
+                try {
+                    startActivityForResult(intent, 123)
+                } catch (e: ActivityNotFoundException) {
+                    alert("Wallet not found!")
+                }
             }
         }
     }
