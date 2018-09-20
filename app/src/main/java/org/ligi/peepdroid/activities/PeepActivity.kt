@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_peep.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
 import org.koin.android.ext.android.inject
 import org.ligi.kaxtui.alert
 import org.ligi.peepdroid.R
@@ -46,16 +49,22 @@ class PeepActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener {
-            val response = if (isReply && peep != null) {
-                peepAPI.reply(peep_input.text.toString(), peep)
-            } else if (isRepeep && peep != null) {
-                peepAPI.share(peep_input.text.toString(), peep)
-            } else
-                peepAPI.peep(peep_input.text.toString())
-            if (response.code() != 200) {
-                alert("could not send peep: " + response.body()?.string())
-            } else {
-                finish()
+            launch {
+                val response = if (isReply && peep != null) {
+                    peepAPI.reply(peep_input.text.toString(), peep)
+                } else if (isRepeep && peep != null) {
+                    peepAPI.share(peep_input.text.toString(), peep)
+                } else {
+                    peepAPI.peep(peep_input.text.toString())
+                }
+
+                async(UI) {
+                    if (response.code() != 200) {
+                        alert("could not send peep: " + response.body()?.string())
+                    } else {
+                        finish()
+                    }
+                }
             }
         }
 
