@@ -8,12 +8,12 @@ import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_peep.*
 import org.koin.android.ext.android.inject
 import org.ligi.kaxtui.alert
-import org.ligi.peepdroid.ui.PeepViewHolder
 import org.ligi.peepdroid.R
-import org.ligi.peepdroid.ui.SpaceTokenizer
-import org.ligi.peepdroid.model.Peep
 import org.ligi.peepdroid.api.PeepAPI
+import org.ligi.peepdroid.model.Peep
 import org.ligi.peepdroid.model.Settings
+import org.ligi.peepdroid.ui.PeepViewHolder
+import org.ligi.peepdroid.ui.SpaceTokenizer
 
 class PeepActivity : AppCompatActivity() {
 
@@ -59,7 +59,7 @@ class PeepActivity : AppCompatActivity() {
             }
         }
 
-        val usernameArray = arrayOf("@peepeth", "@ligi", "@bevan", "@zen")
+        val usernameArray = arrayOf("@peepeth", "@ligi", "@bevan", "@zen", "@ethberlin")
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, usernameArray)
 
         peep_input.setAdapter<ArrayAdapter<String>>(adapter)
