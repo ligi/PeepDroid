@@ -1,4 +1,4 @@
-package org.ligi.peepdroid
+package org.ligi.peepdroid.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -6,6 +6,7 @@ import android.text.method.LinkMovementMethod
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_info.*
 import org.ligi.compat.HtmlCompat
+import org.ligi.peepdroid.R
 
 class InfoActivity : AppCompatActivity() {
 

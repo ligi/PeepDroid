@@ -1,4 +1,4 @@
-package org.ligi.peepdroid
+package org.ligi.peepdroid.api
 
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi

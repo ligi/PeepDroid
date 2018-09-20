@@ -1,4 +1,4 @@
-package org.ligi.peepdroid
+package org.ligi.peepdroid.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -8,8 +8,11 @@ import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_peep.*
 import org.koin.android.ext.android.inject
 import org.ligi.kaxtui.alert
+import org.ligi.peepdroid.ui.PeepViewHolder
+import org.ligi.peepdroid.R
+import org.ligi.peepdroid.ui.SpaceTokenizer
 import org.ligi.peepdroid.model.Peep
-import org.ligi.peepdroid.model.PeepAPI
+import org.ligi.peepdroid.api.PeepAPI
 import org.ligi.peepdroid.model.Settings
 
 class PeepActivity : AppCompatActivity() {

@@ -12,7 +12,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.startKoin
 import org.koin.dsl.module.module
-import org.ligi.peepdroid.model.PeepAPI
+import org.ligi.peepdroid.api.PeepAPI
+import org.ligi.peepdroid.model.SessionStore
 import org.ligi.peepdroid.model.Settings
 import org.ligi.peepdroid.model.SharedPrefsSettings
 

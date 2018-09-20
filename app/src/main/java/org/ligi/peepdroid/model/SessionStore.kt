@@ -1,4 +1,4 @@
-package org.ligi.peepdroid
+package org.ligi.peepdroid.model
 
 import com.chibatching.kotpref.KotprefModel
 

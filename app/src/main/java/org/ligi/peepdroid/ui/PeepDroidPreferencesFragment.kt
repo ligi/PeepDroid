@@ -1,4 +1,4 @@
-package org.ligi.peepdroid
+package org.ligi.peepdroid.ui
 
 
 import android.content.SharedPreferences
@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.support.v7.preference.PreferenceFragmentCompat
 import org.koin.android.ext.android.inject
 import org.ligi.kaxt.recreateWhenPossible
+import org.ligi.peepdroid.R
+import org.ligi.peepdroid.applyNightMode
 import org.ligi.peepdroid.model.Settings
 
 class PeepDroidPreferencesFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {

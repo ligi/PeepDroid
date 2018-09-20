@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".InfoActivity">
+        tools:context=".activities.InfoActivity">
 
     <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -21,7 +21,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <fragment
-            android:name="org.ligi.peepdroid.PeepDroidPreferencesFragment"
+            android:name="org.ligi.peepdroid.ui.PeepDroidPreferencesFragment"
             android:id="@+id/preferences_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

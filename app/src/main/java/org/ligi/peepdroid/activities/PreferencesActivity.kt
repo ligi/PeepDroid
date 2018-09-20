@@ -1,9 +1,10 @@
-package org.ligi.peepdroid
+package org.ligi.peepdroid.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_peep.*
+import org.ligi.peepdroid.R
 
 class PreferenceActivity : AppCompatActivity() {
 

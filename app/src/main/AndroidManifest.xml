@@ -10,16 +10,16 @@
             android:label="@string/app_name"
             android:name=".App"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".PeepActivity"/>
-        <activity android:name=".InfoActivity"/>
-        <activity android:name=".PreferenceActivity"/>
+        <activity android:name=".activities.PeepActivity"/>
+        <activity android:name=".activities.InfoActivity"/>
+        <activity android:name=".activities.PreferenceActivity"/>
     </application>
 
 </manifest>

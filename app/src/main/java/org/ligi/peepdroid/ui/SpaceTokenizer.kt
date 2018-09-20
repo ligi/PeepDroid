@@ -1,4 +1,4 @@
-package org.ligi.peepdroid
+package org.ligi.peepdroid.ui
 
 import android.text.SpannableString
 import android.text.Spanned

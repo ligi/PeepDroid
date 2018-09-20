@@ -1,4 +1,4 @@
-package org.ligi.peepdroid
+package org.ligi.peepdroid.ui
 
 import android.content.Intent
 import android.support.v7.widget.RecyclerView
@@ -11,6 +11,8 @@ import android.view.View
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.peep.view.*
 import org.ligi.kaxt.setVisibility
+import org.ligi.peepdroid.R
+import org.ligi.peepdroid.activities.PeepActivity
 import org.ligi.peepdroid.model.Peep
 import org.ligi.peepdroid.model.Settings
 import java.util.*
@@ -72,9 +74,10 @@ class PeepViewHolder(itemView: View,private val settings: Settings) : RecyclerVi
             startPeepActivity(view, peep, "REPEEP")
         }
 
-        if (peep.parent != null) {
+        val parentPeep = peep.parent?:peep.share
+        if (parentPeep != null) {
             val parent = LayoutInflater.from(view.context).inflate(R.layout.peep, view.parent_container, false)
-            bind(peep.parent, parent)
+            bind(parentPeep, parent)
             view.parent_container.addView(parent)
         } else {
             view.parent_container.visibility = View.GONE

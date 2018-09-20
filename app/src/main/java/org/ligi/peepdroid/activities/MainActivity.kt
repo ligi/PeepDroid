@@ -1,4 +1,4 @@
-package org.ligi.peepdroid
+package org.ligi.peepdroid.activities
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -9,10 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.MenuItem
-import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
@@ -23,29 +20,17 @@ import org.koin.android.ext.android.inject
 import org.ligi.kaxt.recreateWhenPossible
 import org.ligi.kaxt.startActivityFromClass
 import org.ligi.kaxtui.alert
-import org.ligi.peepdroid.model.Peep
-import org.ligi.peepdroid.model.PeepAPI
+import org.ligi.peepdroid.R
+import org.ligi.peepdroid.api.PeepAPI
+import org.ligi.peepdroid.api.parsePeeps
+import org.ligi.peepdroid.model.SessionStore
 import org.ligi.peepdroid.model.Settings
-
-class PeepAdapter(private val list: List<Peep>, private val settings: Settings) : RecyclerView.Adapter<PeepViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeepViewHolder {
-        val li = LayoutInflater.from(parent.context)
-        return PeepViewHolder(li.inflate(R.layout.peep, parent, false), settings)
-    }
-
-    override fun getItemCount() = list.size
-
-    override fun onBindViewHolder(holder: PeepViewHolder, position: Int) {
-        holder.bind(list[position])
-    }
-
-}
+import org.ligi.peepdroid.ui.PeepAdapter
 
 class MainActivity : AppCompatActivity() {
 
     private val peepAPI: PeepAPI by inject()
     private val okHttpClient: OkHttpClient by inject()
-    private val sessionStore: SessionStore by inject()
     private val settings: Settings by inject()
 
     private var currentSecret: String? = null
@@ -138,7 +123,7 @@ class MainActivity : AppCompatActivity() {
 
             peepAPI.setIsUser(tokenLine!!)
             currentSecret = peepAPI.getNewSecret()
-            val addressPart = sessionStore.address ?: ""
+            val addressPart = SessionStore.address ?: ""
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:esm-$addressPart/$currentSecret"))
 
             async(UI) {
@@ -169,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                 if (result.code() != 200) {
                     AlertDialog.Builder(this@MainActivity).setMessage(result.body()?.string()).show()
                 } else {
-                    sessionStore.address = address
+                    SessionStore.address = address
                 }
             }
         }

@@ -16,6 +16,7 @@ data class Peep (
         val block: Int?,
         val instant: Boolean?,
         val parent: Peep?,
+        val share: Peep?,
         val avatarUrl: String,
         val image_url: String?,
         var realName: String,
