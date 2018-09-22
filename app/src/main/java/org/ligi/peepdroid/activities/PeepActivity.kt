@@ -36,7 +36,7 @@ class PeepActivity : AppCompatActivity() {
 
         if (peep != null) {
             val peepView = LayoutInflater.from(this).inflate(R.layout.peep, peep_container)
-            PeepViewHolder(peepView, settings).bind(peep, peepView, false)
+            PeepViewHolder(peepView, settings, peepAPI).bind(peep, peepView, false)
         }
 
         val isReply = intent.getBooleanExtra("REPLY", false) && peep != null

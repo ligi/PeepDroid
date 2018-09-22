@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
             peepAPI.getPeeps()?.let {
                 async(UI) {
-                    peep_recycler.adapter = PeepAdapter(parsePeeps(it), settings)
+                    peep_recycler.adapter = PeepAdapter(parsePeeps(it), settings, peepAPI)
                     swipe_refresh_layout.isRefreshing = false
                 }
             }

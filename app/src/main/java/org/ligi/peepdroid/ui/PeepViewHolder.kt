@@ -1,6 +1,7 @@
 package org.ligi.peepdroid.ui
 
 import android.content.Intent
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils.isEmpty
 import android.text.format.DateUtils.MINUTE_IN_MILLIS
@@ -10,14 +11,23 @@ import android.view.LayoutInflater
 import android.view.View
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.peep.view.*
+import kotlinx.coroutines.experimental.DefaultDispatcher
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import org.ligi.kaxt.setVisibility
+import org.ligi.kaxtui.alert
 import org.ligi.peepdroid.R
 import org.ligi.peepdroid.activities.PeepActivity
+import org.ligi.peepdroid.api.PeepAPI
 import org.ligi.peepdroid.model.Peep
 import org.ligi.peepdroid.model.Settings
 import java.util.*
 
-class PeepViewHolder(itemView: View,private val settings: Settings) : RecyclerView.ViewHolder(itemView) {
+class PeepViewHolder(itemView: View,
+                     private val settings: Settings,
+                     private val peepAPI: PeepAPI
+) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(peep: Peep) {
         bind(peep, itemView)
@@ -45,8 +55,8 @@ class PeepViewHolder(itemView: View,private val settings: Settings) : RecyclerVi
         }
 
 
-        if (peep.image_url!=null) {
-            UrlImageViewHelper.setUrlDrawable(view.peep_image,peep.image_url)
+        if (peep.image_url != null) {
+            UrlImageViewHelper.setUrlDrawable(view.peep_image, peep.image_url)
             view.peep_image.visibility = View.VISIBLE
         } else {
             view.peep_image.visibility = View.GONE
@@ -67,20 +77,36 @@ class PeepViewHolder(itemView: View,private val settings: Settings) : RecyclerVi
         view.controls_container.setVisibility(showControls)
 
         view.reply_btn.setOnClickListener {
-            startPeepActivity(view, peep,"REPLY")
+            startPeepActivity(view, peep, "REPLY")
         }
 
         view.repeep_btn.setOnClickListener {
             startPeepActivity(view, peep, "REPEEP")
         }
 
-        val parentPeep = peep.parent?:peep.share
+        val parentPeep = peep.parent ?: peep.share
         if (parentPeep != null) {
             val parent = LayoutInflater.from(view.context).inflate(R.layout.peep, view.parent_container, false)
             bind(parentPeep, parent)
             view.parent_container.addView(parent)
         } else {
             view.parent_container.visibility = View.GONE
+        }
+
+        view.esno_btn.setOnClickListener {
+            launch {
+                val result = withContext(DefaultDispatcher) { peepAPI.love(peep.ipfs) }
+
+                withContext(UI) {
+                    when (result.code()) {
+                        200 -> Snackbar.make(view.rootView,"Ensō offered successfully",Snackbar.LENGTH_LONG).show()
+                        422 -> view.context.alert("Please login")
+                        406 -> view.context.alert("Cannot offer esno yet - please wait")
+                        else ->view.context.alert("Could not offer esno " + withContext(DefaultDispatcher) { result.body()?.string() })
+                    }
+                }
+            }
+
         }
     }
 

@@ -69,6 +69,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/esno_btn"
                         android:src="@drawable/ic_favorite_black_24dp"
                         android:paddingRight="8dp"
                         android:layout_width="wrap_content"

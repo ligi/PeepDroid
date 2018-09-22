@@ -71,6 +71,19 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
                 }
     }
 
+    fun love(messageID: String): Response {
+
+        val requestBody = FormBody.Builder()
+                .add("love[messageID]", messageID)
+                .build()
+
+        return defaultRequest().url("$BASE_API/loves")
+                .header("X-CSRF-Token", SessionStore.csrf).post(requestBody).build().let {
+                    okHttpClient.newCall(it).execute()
+                }
+    }
+
+
     private fun defaultRequest() = Request.Builder()
             .header("X-Requested-With", "XMLHttpRequest")
             .addHeader("User-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:62.0) Gecko/20100101 Firefox/62.0")
