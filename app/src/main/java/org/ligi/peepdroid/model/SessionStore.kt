@@ -6,4 +6,6 @@ object SessionStore: KotprefModel() {
 
     var address by nullableStringPref(default = null)
     var csrf by stringPref(default = "")
+
+    var currentPeeper: Peeper? = null
 }

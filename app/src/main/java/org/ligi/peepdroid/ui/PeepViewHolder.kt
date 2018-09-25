@@ -64,8 +64,7 @@ class PeepViewHolder(itemView: View,
 
         if (settings.isAvatarsWanted()) {
             if (!isEmpty(peep.avatarUrl)) {
-                val avatarSplit = peep.avatarUrl.split(":")
-                UrlImageViewHelper.setUrlDrawable(view.avatar_image, "https://peepeth.s3-us-west-1.amazonaws.com/images/avatars/" + avatarSplit[1] + "/small." + avatarSplit[2])
+                UrlImageViewHelper.setUrlDrawable(view.avatar_image, peep.avatarUrl.asPeepethImageURL("avatars"))
             } else {
                 view.avatar_image.setImageResource(R.mipmap.ic_launcher)
             }
@@ -99,10 +98,10 @@ class PeepViewHolder(itemView: View,
 
                 withContext(UI) {
                     when (result.code()) {
-                        200 -> Snackbar.make(view.rootView,"Ensō offered successfully",Snackbar.LENGTH_LONG).show()
+                        200 -> Snackbar.make(view.rootView, "Ensō offered successfully", Snackbar.LENGTH_LONG).show()
                         422 -> view.context.alert("Please login")
                         406 -> view.context.alert("Cannot offer esno yet - please wait")
-                        else ->view.context.alert("Could not offer esno " + withContext(DefaultDispatcher) { result.body()?.string() })
+                        else -> view.context.alert("Could not offer esno " + withContext(DefaultDispatcher) { result.body()?.string() })
                     }
                 }
             }
@@ -116,4 +115,8 @@ class PeepViewHolder(itemView: View,
         intent.putExtra(mode, true)
         view.context.startActivity(intent)
     }
+}
+
+fun String.asPeepethImageURL(path: String, size: String = "small") = split(":").let {
+    "https://peepeth.s3-us-west-1.amazonaws.com/images/$path/" + it[1] + "/$size." + it[2]
 }

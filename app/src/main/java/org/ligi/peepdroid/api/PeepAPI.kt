@@ -15,8 +15,9 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
 
     fun getPeeps() = getRequest(("$BASE_API/get_peeps?oldest=0" + (SessionStore.address?.let { "&you=0x$it" } ?: "")))
 
-
     fun init() = getRequest("$BASE_API/_")
+
+    fun getPeeper(address: String,you: Boolean,include_following: Boolean) = getRequest(("$BASE_API/get_account?address=0x$address&you=$you&include_following=$include_following" ))
 
     private fun getRequest(s: String) = try {
         Request.Builder().url(s)

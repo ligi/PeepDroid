@@ -34,6 +34,7 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$support_version"
 
     implementation 'com.squareup.moshi:moshi:1.6.0'
+    implementation 'com.squareup.moshi:moshi-adapters:1.6.0'
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 

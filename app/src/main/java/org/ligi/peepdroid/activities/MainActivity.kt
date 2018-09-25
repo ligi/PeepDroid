@@ -10,7 +10,9 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.nav_header.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
@@ -22,10 +24,12 @@ import org.ligi.kaxt.startActivityFromClass
 import org.ligi.kaxtui.alert
 import org.ligi.peepdroid.R
 import org.ligi.peepdroid.api.PeepAPI
+import org.ligi.peepdroid.api.parsePeeper
 import org.ligi.peepdroid.api.parsePeeps
 import org.ligi.peepdroid.model.SessionStore
 import org.ligi.peepdroid.model.Settings
 import org.ligi.peepdroid.ui.PeepAdapter
+import org.ligi.peepdroid.ui.asPeepethImageURL
 
 class MainActivity : AppCompatActivity() {
 
@@ -150,10 +154,18 @@ class MainActivity : AppCompatActivity() {
                     .header("X-Requested-With", "XMLHttpRequest")
                     .url(url).build()).execute()
 
+            peepAPI.getPeeper(address.toString(), true, true)?.let {
+                SessionStore.currentPeeper = parsePeeper(it)
+            }
+
             async(UI) {
                 if (result.code() != 200) {
                     AlertDialog.Builder(this@MainActivity).setMessage(result.body()?.string()).show()
                 } else {
+                    val currentPeeper = SessionStore.currentPeeper
+                    user_name_label.text = currentPeeper?.slug
+                    val bgURL = currentPeeper?.backgroundUrl?.asPeepethImageURL("backgrounds","medium")
+                    UrlImageViewHelper.setUrlDrawable(user_bg_img, bgURL)
                     SessionStore.address = address
                 }
             }
