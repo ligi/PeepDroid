@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_peep.*
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import org.koin.android.ext.android.inject
 import org.ligi.kaxtui.alert
@@ -58,9 +57,12 @@ class PeepActivity : AppCompatActivity() {
                     peepAPI.peep(peep_input.text.toString())
                 }
 
-                async(UI) {
+                val responseBody = response.body()?.string()
+
+                launch(UI) {
                     if (response.code() != 200) {
-                        alert("could not send peep: " + response.body()?.string())
+
+                        alert("could not send peep: $responseBody")
                     } else {
                         finish()
                     }
