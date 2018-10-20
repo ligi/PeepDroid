@@ -31,7 +31,7 @@ data class Peeper (
         val emailReminder: Boolean,
         val malaria_nets: Int,
         val last_streak: Int,
-        val last_peep: Date,
+        val last_peep: String?,
         val nextLove: Int,
         val verification_to_show: String
 ) : Parcelable
