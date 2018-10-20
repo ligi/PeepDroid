@@ -69,6 +69,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_sign_in -> true.also {
                     signIn()
                 }
+                R.id.menu_change_user -> true.also {
+                    SessionStore.address = null
+                    signIn()
+                }
                 R.id.menu_info -> true.also {
                     startActivityFromClass(InfoActivity::class.java)
                 }
@@ -114,6 +118,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        nav_view.menu.findItem(R.id.menu_change_user).isVisible = SessionStore.address != null
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -168,6 +175,9 @@ class MainActivity : AppCompatActivity() {
                     UrlImageViewHelper.setUrlDrawable(user_bg_img, bgURL)
                     SessionStore.address = address
                 }
+
+                refresh()
+
             }
         }
     }

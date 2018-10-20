@@ -6,6 +6,11 @@
             android:id="@+id/menu_sign_in"/>
 
     <item
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="Switch user"
+            android:id="@+id/menu_change_user"/>
+
+    <item
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="Settings"
             android:id="@+id/menu_preferences"/>
