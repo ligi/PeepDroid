@@ -87,6 +87,7 @@ class PeepViewHolder(itemView: View,
         if (parentPeep != null) {
             val parent = LayoutInflater.from(view.context).inflate(R.layout.peep, view.parent_container, false)
             bind(parentPeep, parent)
+            view.parent_container.removeAllViews()
             view.parent_container.addView(parent)
         } else {
             view.parent_container.visibility = View.GONE
