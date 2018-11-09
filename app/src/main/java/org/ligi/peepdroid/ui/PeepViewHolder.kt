@@ -11,10 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.peep.view.*
-import kotlinx.coroutines.experimental.DefaultDispatcher
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.ligi.kaxt.setVisibility
 import org.ligi.kaxtui.alert
 import org.ligi.peepdroid.R
@@ -94,17 +94,17 @@ class PeepViewHolder(itemView: View,
         }
 
         view.esno_btn.setOnClickListener {
-            launch {
-                val result = withContext(DefaultDispatcher) { peepAPI.love(peep.ipfs) }
+            GlobalScope.launch(Dispatchers.Main) {
+                val result = withContext(Dispatchers.Default) { peepAPI.love(peep.ipfs) }
 
-                withContext(UI) {
-                    when (result.code()) {
-                        200 -> Snackbar.make(view.rootView, "Ensō offered successfully", Snackbar.LENGTH_LONG).show()
-                        422 -> view.context.alert("Please login")
-                        406 -> view.context.alert("Cannot offer esno yet - please wait")
-                        else -> view.context.alert("Could not offer esno " + withContext(DefaultDispatcher) { result.body()?.string() })
-                    }
+
+                when (result.code()) {
+                    200 -> Snackbar.make(view.rootView, "Ensō offered successfully", Snackbar.LENGTH_LONG).show()
+                    422 -> view.context.alert("Please login")
+                    406 -> view.context.alert("Cannot offer esno yet - please wait")
+                    else -> view.context.alert("Could not offer esno " + withContext(Dispatchers.Default) { result.body()?.string() })
                 }
+
             }
 
         }

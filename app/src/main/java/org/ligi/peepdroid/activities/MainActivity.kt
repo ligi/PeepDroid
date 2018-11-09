@@ -13,9 +13,10 @@ import android.view.MenuItem
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.koin.android.ext.android.inject
@@ -109,10 +110,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refresh() {
-        launch {
+        GlobalScope.launch(Dispatchers.Main) {
 
             peepAPI.getPeeps()?.let {
-                async(UI) {
+                GlobalScope.async(Dispatchers.Main) {
                     peep_recycler.adapter = PeepAdapter(parsePeeps(it), settings, peepAPI)
                     swipe_refresh_layout.isRefreshing = false
                 }
@@ -128,7 +129,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun signIn() {
-        launch {
+        GlobalScope.launch(Dispatchers.Default) {
             val init = peepAPI.init()
             val tokenLine = init?.lines()?.first { it.contains("csrf-token") }?.split("content=")?.last()?.split("\"")?.get(1)
 
@@ -137,7 +138,7 @@ class MainActivity : AppCompatActivity() {
             val addressPart = SessionStore.address ?: ""
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:esm-$addressPart/$currentSecret"))
 
-            async(UI) {
+            GlobalScope.async(Dispatchers.Main) {
                 try {
                     startActivityForResult(intent, 123)
                 } catch (e: ActivityNotFoundException) {
@@ -150,7 +151,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        launch {
+        GlobalScope.launch(Dispatchers.Default) {
             val signature = data?.getStringExtra("SIGNATURE")
 
             val address = data?.getStringExtra("ADDRESS")?.toLowerCase()
@@ -165,7 +166,7 @@ class MainActivity : AppCompatActivity() {
                 SessionStore.currentPeeper = parsePeeper(it)
             }
 
-            async(UI) {
+            GlobalScope.async(Dispatchers.Main) {
                 if (result.code() != 200) {
                     AlertDialog.Builder(this@MainActivity).setMessage(result.body()?.string()).show()
                 } else {

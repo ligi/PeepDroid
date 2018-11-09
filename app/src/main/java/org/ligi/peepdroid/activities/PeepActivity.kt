@@ -13,8 +13,9 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_peep.*
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.ligi.kaxtui.alert
 import org.ligi.peepdroid.R
@@ -76,7 +77,7 @@ class PeepActivity : AppCompatActivity() {
         peep_input.setTokenizer(SpaceTokenizer())
     }
 
-    private fun doPeep(isReply: Boolean, peep: Peep?, isRepeep: Boolean) = launch {
+    private fun doPeep(isReply: Boolean, peep: Peep?, isRepeep: Boolean) = GlobalScope.launch(Dispatchers.Default) {
         val response = if (isReply && peep != null) {
             peepAPI.reply(peep_input.text.toString(), peep, image)
         } else if (isRepeep && peep != null) {
@@ -87,7 +88,7 @@ class PeepActivity : AppCompatActivity() {
 
         val responseBody = response.body()?.string()
 
-        launch(UI) {
+        GlobalScope.launch(Dispatchers.Main) {
             if (response.code() != 200) {
 
                 alert("could not send peep: $responseBody")
@@ -124,7 +125,7 @@ class PeepActivity : AppCompatActivity() {
             image_preview.setImageBitmap(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size))
             image = PeepethPicture(null, null)
             fabProgressCircle.show()
-            launch {
+            GlobalScope.launch(Dispatchers.Default) {
                 val res = peepAPI.uploadImage(imageBytes)
                 val string = res.body()?.string()
 
@@ -137,7 +138,7 @@ class PeepActivity : AppCompatActivity() {
                     }
                 }
 
-                launch(UI) {
+                GlobalScope.launch(Dispatchers.Main) {
                     fabProgressCircle.hide()
                 }
             }

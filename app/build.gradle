@@ -23,7 +23,7 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.24.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$support_version"
@@ -62,13 +62,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
-
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
-}
-
 
 androidExtensions {
     experimental = true
