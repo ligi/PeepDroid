@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
 
     implementation 'com.github.ligi:KAXT:0.20'
-    implementation 'com.github.ligi:KAXTUI:0.5'
+    implementation 'com.github.ligi:KAXTUI:0.6'
 
     compile 'com.github.ligi:extracompats:0.4'
 
