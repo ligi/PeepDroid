@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refresh() {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.Default) {
 
             peepAPI.getPeeps()?.let {
                 GlobalScope.async(Dispatchers.Main) {
