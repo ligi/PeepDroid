@@ -51,7 +51,7 @@ dependencies {
     implementation 'com.github.ligi:extracompats:0.5'
 
     // Koin for Android
-    implementation "org.koin:koin-android:1.0.0"
+    implementation "org.koin:koin-android:1.0.2"
 
     implementation "com.chibatching.kotpref:kotpref:2.6.0"
     implementation "com.android.support:preference-v14:$support_version"
