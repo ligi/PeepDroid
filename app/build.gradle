@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 apply plugin: 'com.github.ben-manes.versions'
 
@@ -51,15 +52,27 @@ dependencies {
     implementation 'com.github.ligi:extracompats:0.5'
 
     // Koin for Android
-    implementation "org.koin:koin-android:1.0.2"
+    implementation "org.koin:koin-android-viewmodel:1.0.2"
 
     implementation "com.chibatching.kotpref:kotpref:2.6.0"
     implementation "com.android.support:preference-v14:$support_version"
 
     implementation 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'
 
+    implementation "android.arch.lifecycle:extensions:$arch_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
+    kapt "android.arch.lifecycle:compiler:$arch_version"
+
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
+
+    implementation "android.arch.paging:runtime:1.0.1"
+
     testImplementation 'junit:junit:4.12'
     testImplementation "com.google.truth:truth:0.42"
+
+    androidTestImplementation "android.arch.persistence.room:testing:$room_version"
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

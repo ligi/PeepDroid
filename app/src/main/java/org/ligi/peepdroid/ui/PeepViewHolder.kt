@@ -21,16 +21,21 @@ import org.ligi.peepdroid.R
 import org.ligi.peepdroid.activities.PeepActivity
 import org.ligi.peepdroid.api.PeepAPI
 import org.ligi.peepdroid.model.Peep
+import org.ligi.peepdroid.model.PeepDao
 import org.ligi.peepdroid.model.Settings
 import java.util.*
 
 class PeepViewHolder(itemView: View,
                      private val settings: Settings,
-                     private val peepAPI: PeepAPI
+                     private val peepAPI: PeepAPI,
+                     private val peepDao: PeepDao
 ) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(peep: Peep) {
-        bind(peep, itemView)
+    fun bind(peep: Peep?) {
+        peep?.run {
+            bind(peep, itemView)
+        }
+
     }
 
     fun bind(peep: Peep, view: View, showControls: Boolean = true) {
@@ -83,9 +88,10 @@ class PeepViewHolder(itemView: View,
             startPeepActivity(view, peep, "REPEEP")
         }
 
-        val parentPeep = peep.parent ?: peep.share
-        if (parentPeep != null) {
+        val parentPeepId = peep.parentId ?: peep.shareId
+        if (parentPeepId != null) {
             val parent = LayoutInflater.from(view.context).inflate(R.layout.peep, view.parent_container, false)
+            val parentPeep = peepDao.getPeepByID(parentPeepId)
             bind(parentPeep, parent)
             view.parent_container.removeAllViews()
             view.parent_container.addView(parent)
@@ -96,7 +102,6 @@ class PeepViewHolder(itemView: View,
         view.esno_btn.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
                 val result = withContext(Dispatchers.Default) { peepAPI.love(peep.ipfs) }
-
 
                 when (result.code()) {
                     200 -> Snackbar.make(view.rootView, "Ensō offered successfully", Snackbar.LENGTH_LONG).show()

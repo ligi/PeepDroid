@@ -20,10 +20,7 @@ import org.koin.android.ext.android.inject
 import org.ligi.kaxtui.alert
 import org.ligi.peepdroid.R
 import org.ligi.peepdroid.api.PeepAPI
-import org.ligi.peepdroid.model.Peep
-import org.ligi.peepdroid.model.PeepethPicture
-import org.ligi.peepdroid.model.REQUEST_CODE_PICK_IMAGE
-import org.ligi.peepdroid.model.Settings
+import org.ligi.peepdroid.model.*
 import org.ligi.peepdroid.ui.PeepViewHolder
 import org.ligi.peepdroid.ui.SpaceTokenizer
 
@@ -32,6 +29,7 @@ class PeepActivity : AppCompatActivity() {
 
     private val peepAPI: PeepAPI by inject()
     private val settings: Settings by inject()
+    private val peepDatabase: PeepDatabase by inject()
 
     private var image: PeepethPicture? = null
 
@@ -48,7 +46,7 @@ class PeepActivity : AppCompatActivity() {
 
         if (peep != null) {
             val peepView = LayoutInflater.from(this).inflate(R.layout.peep, peep_container)
-            PeepViewHolder(peepView, settings, peepAPI).bind(peep, peepView, false)
+            PeepViewHolder(peepView, settings, peepAPI, peepDatabase.peepDao()).bind(peep, peepView, false)
         }
 
         val isReply = intent.getBooleanExtra("REPLY", false) && peep != null

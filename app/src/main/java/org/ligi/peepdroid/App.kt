@@ -1,6 +1,7 @@
 package org.ligi.peepdroid
 
 import android.app.Application
+import android.arch.persistence.room.Room
 import android.support.v7.app.AppCompatDelegate
 import com.chibatching.kotpref.Kotpref
 import com.franmontiel.persistentcookiejar.PersistentCookieJar
@@ -11,8 +12,11 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.startKoin
+import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
+import org.ligi.peepdroid.activities.PeepViewModel
 import org.ligi.peepdroid.api.PeepAPI
+import org.ligi.peepdroid.model.PeepDatabase
 import org.ligi.peepdroid.model.SessionStore
 import org.ligi.peepdroid.model.Settings
 import org.ligi.peepdroid.model.SharedPrefsSettings
@@ -36,8 +40,10 @@ class App : Application() {
         single { Moshi.Builder().build() }
         single { SessionStore }
         single { PeepAPI(get(), get(), get()) }
-        single( definition = { SharedPrefsSettings(this@App) as Settings })
+        single(definition = { SharedPrefsSettings(this@App) as Settings })
 
+        single { Room.databaseBuilder(this@App, PeepDatabase::class.java, "peep_db").build() }
+        viewModel { PeepViewModel(this@App, get()) }
     }
 
     override fun onCreate() {

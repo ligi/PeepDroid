@@ -1,5 +1,11 @@
 package org.ligi.peepdroid.activities
 
+import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
+import android.arch.paging.LivePagedListBuilder
+import android.arch.paging.PagedList
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.Configuration
@@ -20,6 +26,7 @@ import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 import org.ligi.kaxt.recreateWhenPossible
 import org.ligi.kaxt.startActivityFromClass
 import org.ligi.kaxtui.alert
@@ -27,16 +34,27 @@ import org.ligi.peepdroid.R
 import org.ligi.peepdroid.api.PeepAPI
 import org.ligi.peepdroid.api.parsePeeper
 import org.ligi.peepdroid.api.parsePeeps
+import org.ligi.peepdroid.model.Peep
+import org.ligi.peepdroid.model.PeepDatabase
 import org.ligi.peepdroid.model.SessionStore
 import org.ligi.peepdroid.model.Settings
 import org.ligi.peepdroid.ui.PeepAdapter
 import org.ligi.peepdroid.ui.asPeepethImageURL
+
+class PeepViewModel(app: Application, peepDatabase: PeepDatabase) : AndroidViewModel(app) {
+
+    var peepLiveData: LiveData<PagedList<Peep>> = LivePagedListBuilder<Int, Peep>(peepDatabase.peepDao().getAllPaged(), 50).build()
+
+}
 
 class MainActivity : AppCompatActivity() {
 
     private val peepAPI: PeepAPI by inject()
     private val okHttpClient: OkHttpClient by inject()
     private val settings: Settings by inject()
+    private val peepDatabase: PeepDatabase by inject()
+
+    val peepViewModel by viewModel<PeepViewModel>()
 
     private var currentSecret: String? = null
     private var lastNightMode: Int? = null
@@ -54,6 +72,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         peep_recycler.layoutManager = LinearLayoutManager(this)
+
+        val peepAdapter = PeepAdapter(settings, peepAPI, peepDatabase.peepDao())
+        peep_recycler.adapter = peepAdapter
+
+        peepViewModel.peepLiveData.observe(this, Observer { peeps ->
+            if (peeps != null) peepAdapter.submitList(peeps)
+        })
+
 
         refresh()
 
@@ -113,8 +139,10 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.Default) {
 
             peepAPI.getPeeps()?.let {
+                parsePeeps(it).forEach { peep ->
+                    peepDatabase.peepDao().insert(peep)
+                }
                 GlobalScope.async(Dispatchers.Main) {
-                    peep_recycler.adapter = PeepAdapter(parsePeeps(it), settings, peepAPI)
                     swipe_refresh_layout.isRefreshing = false
                 }
             }
@@ -178,7 +206,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     val currentPeeper = SessionStore.currentPeeper
                     user_name_label.text = currentPeeper?.slug
-                    val bgURL = currentPeeper?.backgroundUrl?.asPeepethImageURL("backgrounds","medium")
+                    val bgURL = currentPeeper?.backgroundUrl?.asPeepethImageURL("backgrounds", "medium")
                     UrlImageViewHelper.setUrlDrawable(user_bg_img, bgURL)
                     SessionStore.address = address
                 }
