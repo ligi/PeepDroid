@@ -133,16 +133,22 @@ class MainActivity : AppCompatActivity() {
             val init = peepAPI.init()
             val tokenLine = init?.lines()?.first { it.contains("csrf-token") }?.split("content=")?.last()?.split("\"")?.get(1)
 
-            peepAPI.setIsUser(tokenLine!!)
-            currentSecret = peepAPI.getNewSecret()
-            val addressPart = SessionStore.address ?: ""
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:esm-$addressPart/$currentSecret"))
+            if (tokenLine == null) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    alert("Cannot connect to PeepETH")
+                }
+            } else {
+                peepAPI.setIsUser(tokenLine)
+                currentSecret = peepAPI.getNewSecret()
+                val addressPart = SessionStore.address ?: ""
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("ethereum:esm-$addressPart/$currentSecret"))
 
-            GlobalScope.async(Dispatchers.Main) {
-                try {
-                    startActivityForResult(intent, 123)
-                } catch (e: ActivityNotFoundException) {
-                    alert("Wallet not found!")
+                GlobalScope.launch(Dispatchers.Main) {
+                    try {
+                        startActivityForResult(intent, 123)
+                    } catch (e: ActivityNotFoundException) {
+                        alert("Wallet not found!")
+                    }
                 }
             }
         }
