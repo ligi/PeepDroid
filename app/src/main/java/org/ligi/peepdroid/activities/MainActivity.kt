@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     private val settings: Settings by inject()
     private val peepDatabase: PeepDatabase by inject()
 
-    val peepViewModel by viewModel<PeepViewModel>()
+    private val peepViewModel by viewModel<PeepViewModel>()
 
     private var currentSecret: String? = null
     private var lastNightMode: Int? = null
@@ -200,7 +200,7 @@ class MainActivity : AppCompatActivity() {
                 SessionStore.currentPeeper = parsePeeper(it)
             }
 
-            GlobalScope.async(Dispatchers.Main) {
+            GlobalScope.launch(Dispatchers.Main) {
                 if (result.code() != 200) {
                     AlertDialog.Builder(this@MainActivity).setMessage(result.body()?.string()).show()
                 } else {
