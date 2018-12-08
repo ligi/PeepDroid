@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity() {
                     try {
                         startActivityForResult(intent, 123)
                     } catch (e: ActivityNotFoundException) {
-                        alert("Wallet not found!")
+                        alert("No compatible wallet found! Currently the only supported one is WallETH - but this can change in the future.")
                     }
                 }
             }
