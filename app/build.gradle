@@ -49,6 +49,8 @@ dependencies {
     implementation 'com.github.ligi:KAXT:0.20'
     implementation 'com.github.ligi:KAXTUI:0.6'
 
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
     implementation 'com.github.ligi:extracompats:0.5'
 
     // Koin for Android

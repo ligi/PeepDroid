@@ -209,6 +209,10 @@ class MainActivity : AppCompatActivity() {
                     val bgURL = currentPeeper?.backgroundUrl?.asPeepethImageURL("backgrounds", "medium")
                     UrlImageViewHelper.setUrlDrawable(user_bg_img, bgURL)
                     SessionStore.address = address
+
+                    val avatarURL = currentPeeper?.avatarUrl?.asPeepethImageURL("avatars", "medium")
+                    UrlImageViewHelper.setUrlDrawable(user_avatar_img, avatarURL)
+
                 }
 
                 refresh()
