@@ -45,6 +45,7 @@ class PeepViewModel(app: Application, peepDatabase: PeepDatabase) : AndroidViewM
 
     var peepLiveData: LiveData<PagedList<Peep>> = LivePagedListBuilder<Int, Peep>(peepDatabase.peepDao().getAllPaged(), 50).build()
 
+    var isSignedIn = false
 }
 
 class MainActivity : AppCompatActivity() {
@@ -148,7 +149,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        nav_view.menu.findItem(R.id.menu_change_user).isVisible = SessionStore.address != null
+        val hasUser = SessionStore.address != null
+        nav_view.menu.findItem(R.id.menu_change_user).isVisible = hasUser
+
+        nav_view.menu.findItem(R.id.menu_sign_in).isVisible = !peepViewModel.isSignedIn
 
     }
 
