@@ -124,5 +124,9 @@ class PeepViewHolder(itemView: View,
 }
 
 fun String.asPeepethImageURL(path: String, size: String = "small") = split(":").let {
-    "https://peepeth.s3-us-west-1.amazonaws.com/images/$path/" + it[1] + "/$size." + it[2]
+    if (it.size > 2) {
+        "https://peepeth.s3-us-west-1.amazonaws.com/images/$path/" + it[1] + "/$size." + it[2]
+    } else {
+        null
+    }
 }
