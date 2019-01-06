@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ListPreference
             android:defaultValue="@string/default_day_night"
@@ -7,14 +7,17 @@
             android:entryValues="@array/day_night_keys"
             android:key="@string/key_prefs_day_night"
             android:summary="@string/day_or_night_summary"
-            android:title="@string/day_or_night"/>
+            android:title="@string/day_or_night"
+            app:iconSpaceReserved="false"/>
 
     <CheckBoxPreference
             android:title="Display time in list"
-            android:key="@string/key_prefs_time"/>
+            android:key="@string/key_prefs_time"
+            app:iconSpaceReserved="false"/>
 
     <CheckBoxPreference
             android:title="Display avatars"
-            android:key="@string/key_prefs_avatars"/>
+            android:key="@string/key_prefs_avatars"
+            app:iconSpaceReserved="false"/>
 
 </PreferenceScreen>
