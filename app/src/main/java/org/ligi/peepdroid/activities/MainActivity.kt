@@ -86,7 +86,11 @@ class MainActivity : AppCompatActivity() {
         refresh()
 
         fab.setOnClickListener {
-            startActivityFromClass(PeepActivity::class.java)
+            if (peepViewModel.isSignedIn) {
+                startActivityFromClass(PeepActivity::class.java)
+            } else {
+                signIn()
+            }
         }
 
         swipe_refresh_layout.setOnRefreshListener {
@@ -183,6 +187,12 @@ class MainActivity : AppCompatActivity() {
         if (avatarURL != null) {
             UrlImageViewHelper.setUrlDrawable(nav_view.getHeaderView(0).user_avatar_img, avatarURL)
         }
+
+        fab.setImageResource(if (peepViewModel.isSignedIn) {
+            R.drawable.ic_edit
+        } else {
+            R.drawable.ic_vpn_key_black_24dp
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
