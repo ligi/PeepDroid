@@ -42,6 +42,11 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
     }
 
 
+    fun isSignedIn() = defaultRequest().url("$BASE_API/api/signed_in").build().let {
+        val result = okHttpClient.newCall(it).execute().body()?.string()
+        result == "true"
+    }
+
     fun getUser() = defaultRequest().url("$BASE_API/get_account?you=true&address=${SessionStore.address}").build().let {
         okHttpClient.newCall(it).execute().body()?.string()
     }
@@ -106,5 +111,7 @@ class PeepAPI(private val okHttpClient: OkHttpClient,
                     okHttpClient.newCall(it).execute()
                 }
     }
+
+
 
 }

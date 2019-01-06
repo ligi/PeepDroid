@@ -18,7 +18,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.nav_header.*
+import kotlinx.android.synthetic.main.nav_header.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -37,6 +37,7 @@ import org.ligi.peepdroid.api.parsePeeps
 import org.ligi.peepdroid.model.Peep
 import org.ligi.peepdroid.model.PeepDatabase
 import org.ligi.peepdroid.model.SessionStore
+import org.ligi.peepdroid.model.SessionStore.address
 import org.ligi.peepdroid.model.Settings
 import org.ligi.peepdroid.ui.PeepAdapter
 import org.ligi.peepdroid.ui.asPeepethImageURL
@@ -136,8 +137,11 @@ class MainActivity : AppCompatActivity() {
         actionBarDrawerToggle.onConfigurationChanged(newConfig)
     }
 
-    private fun refresh() {
-        GlobalScope.launch(Dispatchers.Default) {
+    private fun refresh() = GlobalScope.launch(Dispatchers.Main) {
+        viewModelToUI()
+
+        GlobalScope.async(Dispatchers.Default) {
+            peepViewModel.isSignedIn = peepAPI.isSignedIn()
 
             peepAPI.getPeeps()?.let {
                 parsePeeps(it).forEach { peep ->
@@ -147,13 +151,38 @@ class MainActivity : AppCompatActivity() {
                     swipe_refresh_layout.isRefreshing = false
                 }
             }
-        }
+        }.await()
 
-        val hasUser = SessionStore.address != null
-        nav_view.menu.findItem(R.id.menu_change_user).isVisible = hasUser
+        viewModelToUI()
+    }
+
+    private fun viewModelToUI() {
+        val hasUser = address != null
+        nav_view.menu.findItem(R.id.menu_change_user).isVisible = hasUser && peepViewModel.isSignedIn
 
         nav_view.menu.findItem(R.id.menu_sign_in).isVisible = !peepViewModel.isSignedIn
 
+        nav_view.getHeaderView(0).user_bg_img?.let {
+            val bgURL = SessionStore.currentPeeper?.backgroundUrl?.asPeepethImageURL("backgrounds", "medium")
+            if (bgURL != null) {
+                UrlImageViewHelper.setUrlDrawable(it, bgURL)
+            } else {
+                it.setImageResource(R.drawable.empty_header)
+            }
+
+        }
+
+        nav_view.getHeaderView(0).user_name_label.text = if (SessionStore.currentPeeper?.slug != null) {
+            SessionStore.currentPeeper?.slug
+        } else {
+            "Not signed in"
+        }
+
+        val avatarURL = SessionStore.currentPeeper?.avatarUrl?.asPeepethImageURL("avatars", "medium")
+
+        if (avatarURL != null) {
+            UrlImageViewHelper.setUrlDrawable(nav_view.getHeaderView(0).user_avatar_img, avatarURL)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -192,7 +221,7 @@ class MainActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.Default) {
             val signature = data?.getStringExtra("SIGNATURE")
 
-            val address = data?.getStringExtra("ADDRESS")?.toLowerCase()
+            SessionStore.address = data?.getStringExtra("ADDRESS")?.toLowerCase()
 
             val url = "https://peepeth.com/verify_signed_secret.js?signed_token=0x" + signature + "&original_token=" + currentSecret?.replace(" ", "+") + "&address=0x$address&provider=metamask"
 
@@ -200,28 +229,18 @@ class MainActivity : AppCompatActivity() {
                     .header("X-Requested-With", "XMLHttpRequest")
                     .url(url).build()).execute()
 
-            peepAPI.getPeeper(address.toString(), true, true)?.let {
+            peepAPI.getPeeper(SessionStore.address.toString(), true, true)?.let {
                 SessionStore.currentPeeper = parsePeeper(it)
             }
 
-            GlobalScope.launch(Dispatchers.Main) {
-                if (result.code() != 200) {
+            if (result.code() != 200) {
+                GlobalScope.launch(Dispatchers.Main) {
                     AlertDialog.Builder(this@MainActivity).setMessage(result.body()?.string()).show()
-                } else {
-                    val currentPeeper = SessionStore.currentPeeper
-                    user_name_label.text = currentPeeper?.slug
-                    val bgURL = currentPeeper?.backgroundUrl?.asPeepethImageURL("backgrounds", "medium")
-                    UrlImageViewHelper.setUrlDrawable(user_bg_img, bgURL)
-                    SessionStore.address = address
-
-                    val avatarURL = currentPeeper?.avatarUrl?.asPeepethImageURL("avatars", "medium")
-                    UrlImageViewHelper.setUrlDrawable(user_avatar_img, avatarURL)
-
                 }
-
-                refresh()
-
             }
+
+            refresh()
         }
     }
+
 }
